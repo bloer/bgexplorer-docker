@@ -1,0 +1,32 @@
+name: bgexplorer
+
+services:
+  app:
+    build: .
+    volumes:
+      - logs:/var/log
+    ports:
+      - "${BGEXPLORER_PORT}:5000"
+    depends_on:
+      - mongo
+    configs:
+      - bgexplorer_app_config
+    secrets:
+      - flask_secret_key
+        
+  mongo:
+    image: mongo:5
+    volumes:
+      - mongodata:/data/db
+
+volumes:
+  mongodata:
+  logs:
+
+configs:
+  bgexplorer_app_config:
+    file: ./config.py
+
+secrets:
+  flask_secret_key:
+    file: ./.secret_key
